@@ -1,7 +1,8 @@
-const { JWT_SECRET } = require("../secrets"); // use this secret!
+const { JWT_SECRET } = require("../secrets/index"); // use this secret!
 const {findBy} = require("../users/users-model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const bodyParser = require("body-parser");
 
 const restricted = (req, res, next) => {
   /*
@@ -19,13 +20,22 @@ const restricted = (req, res, next) => {
 
     Put the decoded token in the req object, to make life easier for middlewares downstream!
   */
-    if (!req.body.Authorization){  
+    if (!req.headers.authorization){  
       res.status(401).json({"message": "Token required"});
-    }else if (req.body.Authorization !== req.signedToken){
-      req.status(401).json({"message": "Token invalid"});
     }else{
-      next();
+      const token = req.headers.authorization;
+      jwt.verify(token, 'shh', (err , decoded)=>{
+        if(err){
+          res.status(401).json({"message": "Token invalid"});
+        }else{
+          req.decodedToken = decoded;
+          console.log(" req.decodedToken = ", req.decodedToken);
+          next();
+        }
+      })
     }
+
+    
 }
 
 const only = role_name => (req, res, next) => {
@@ -39,8 +49,8 @@ const only = role_name => (req, res, next) => {
 
     Pull the decoded token from the req object, to avoid verifying it again!
   */
-    if (req.existingUser.role_name !== role_name){
-      req.status(403).json({"message": "This is not for you"});
+    if (req.decodedToken.role_name !== role_name){
+      res.status(403).json({"message": "This is not for you"});
     }else{
       next();
     }
@@ -93,7 +103,7 @@ const generateToken = async (req, res, next) => {
     }
 
     // req.signedToken = jwt.sign(payload, JWT_SECRET, options);
-    req.signedToken = jwt.sign(payload, 'ssh', options);
+    req.signedToken = jwt.sign(payload, 'shh', options);
     next()
 }
 

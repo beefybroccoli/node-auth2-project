@@ -7,8 +7,8 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
-    "test": "cross-env NODE_ENV=testing jest --verbose --runInBand",
-    "push": "git add . && git commit -m '...' && git push origin main"
+    "test": "cross-env NODE_ENV=testing jest --verbose --runInBand --watch",
+    "push": "git add . && git commit -m 'met mvp' && git push origin main"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^4.6.0",

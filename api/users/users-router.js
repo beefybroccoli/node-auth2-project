@@ -46,7 +46,7 @@ router.get("/:user_id", restricted, only('admin'), (req, res, next) => { // done
       if( array.length === 0){
         res.status(404).json({message:`user_id ${req.params.user_id} not found`});
       }else{
-        res.json(array);
+        res.json(array[0]);
       }
     })
     .catch(next);
