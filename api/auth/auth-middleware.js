@@ -1,6 +1,7 @@
 const { JWT_SECRET } = require("../secrets"); // use this secret!
 const {findBy} = require("../users/users-model");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const restricted = (req, res, next) => {
   /*
@@ -18,8 +19,10 @@ const restricted = (req, res, next) => {
 
     Put the decoded token in the req object, to make life easier for middlewares downstream!
   */
-    if (false){
-      
+    if (!req.body.Authorization){  
+      res.status(401).json({"message": "Token required"});
+    }else if (req.body.Authorization !== req.signedToken){
+      req.status(401).json({"message": "Token invalid"});
     }else{
       next();
     }
@@ -77,6 +80,23 @@ const comparePassword = async (req, res, next) => {
   }
 }
 
+const generateToken = async (req, res, next) => {
+
+    const payload = {
+      subject: req.existingUser.user_id,
+      username: req.existingUser.username,
+      role_name: req.existingUser.role_name,
+    };
+
+    const options = {
+      expiresIn: '1d',
+    }
+
+    // req.signedToken = jwt.sign(payload, JWT_SECRET, options);
+    req.signedToken = jwt.sign(payload, 'ssh', options);
+    next()
+}
+
 const checkUsernameExists = async (req, res, next) => {
   /*
     If the username in req.body does NOT exist in the database
@@ -85,7 +105,7 @@ const checkUsernameExists = async (req, res, next) => {
       "message": "Invalid credentials"
     }
   */
-    const array = await findBy({'username':req.params.username});
+    const array = await findBy({'username':req.body.username});
     if (array.length === 0){
       res.status(401).json({"message": "Invalid credentials"});
     }else{
@@ -139,5 +159,6 @@ module.exports = {
   only,
   checkUsernameFree,
   checkPassword,
-  comparePassword
+  comparePassword,
+  generateToken
 }
