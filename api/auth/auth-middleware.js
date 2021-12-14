@@ -66,7 +66,7 @@ const checkUsernameFree = async (req, res, next) => {
   }
 }
 
-const checkPassword = async (req, res, next) => {
+const validatePassword = async (req, res, next) => {
   const { password } = req.body;
   if (typeof password === 'undefined' || typeof password !== 'string' || password === '') {
     res.status(401).json({ message: 'require password' });
@@ -158,7 +158,7 @@ module.exports = {
   validateRoleName,
   only,
   checkUsernameFree,
-  checkPassword,
+  validatePassword,
   comparePassword,
   generateToken
 }

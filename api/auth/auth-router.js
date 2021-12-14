@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const { checkUsernameExists, validateRoleName, checkUsernameFree, checkPassword, comparePassword, generateToken } = require('./auth-middleware');
+const { checkUsernameExists, validateRoleName, checkUsernameFree, validatePassword, comparePassword, generateToken } = require('./auth-middleware');
 const { add } = require("../users/users-model");
 
-router.post("/register", checkUsernameFree, validateRoleName, checkPassword, async (req, res, next) => {
+router.post("/register", checkUsernameFree, validateRoleName, validatePassword, async (req, res, next) => {
   /**
     [POST] /api/auth/register { "username": "anna", "password": "1234", "role_name": "angel" }
 
