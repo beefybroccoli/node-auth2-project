@@ -1,4 +1,4 @@
-const { JWT_SECRET } = require("../secrets/index"); // use this secret!
+const { JWT_SECRET } = require("../secrets"); // use this secret!
 const {findBy} = require("../users/users-model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -24,12 +24,11 @@ const restricted = (req, res, next) => {
       res.status(401).json({"message": "Token required"});
     }else{
       const token = req.headers.authorization;
-      jwt.verify(token, 'shh', (err , decoded)=>{
+      jwt.verify(token, JWT_SECRET, (err , decoded)=>{
         if(err){
           res.status(401).json({"message": "Token invalid"});
         }else{
           req.decodedToken = decoded;
-          console.log(" req.decodedToken = ", req.decodedToken);
           next();
         }
       })
@@ -102,8 +101,7 @@ const generateToken = async (req, res, next) => {
       expiresIn: '1d',
     }
 
-    // req.signedToken = jwt.sign(payload, JWT_SECRET, options);
-    req.signedToken = jwt.sign(payload, 'shh', options);
+    req.signedToken = jwt.sign(payload, JWT_SECRET, options);
     next()
 }
 
