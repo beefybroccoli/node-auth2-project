@@ -61,10 +61,18 @@ const checkUsernameFree = async (req, res, next) => {
 
 const checkPassword = async (req, res, next) => {
   const {password} = req.body;
-  if (typeof password === 'undefined' || typeof password !== 'string' || password.trim() === ''){
+  if (typeof password === 'undefined' || typeof password !== 'string' || password === ''){
     res.status(401).json({message:'require password'});
   }else{
     req.body.password =  bcrypt.hashSync(password, 10);
+    next();
+  }
+}
+
+const comparePassword = async (req, res, next) => {
+  if ( !bcrypt.compareSync(req.body.password, req.existingUser.password)){
+    res.status(401).json({"message": "Invalid credentials"});
+  }else{
     next();
   }
 }
@@ -102,7 +110,7 @@ const validateRoleName = (req, res, next) => {
       "message": "Role name can not be admin"
     }
   */
-  else if(role_name === 'admin'){
+  else if(role_name.trim() === 'admin'){
     res.status(422).json({"message": "Role name can not be admin"});
   }
   /*
@@ -112,14 +120,14 @@ const validateRoleName = (req, res, next) => {
       "message": "Role name can not be longer than 32 chars"
     }
   */
-  else if(role_name.length < 0 || role_name.length > 32){
+  else if(role_name.trim().length > 32){
     res.status(422).json({"message": "Role name can not be longer than 32 chars"});
   }
   /*
     If the role_name in the body is valid, set req.role_name to be the trimmed string and proceed.
   */
   else{
-    req.role_name = role_name.trim();
+    req.body.role_name = role_name.trim();
     next();
   }
 }
@@ -130,5 +138,6 @@ module.exports = {
   validateRoleName,
   only,
   checkUsernameFree,
-  checkPassword
+  checkPassword,
+  comparePassword
 }
