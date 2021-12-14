@@ -54,7 +54,6 @@ const only = role_name => (req, res, next) => {
 }
 
 const checkUsernameFree = async (req, res, next) => {
-
   const { username } = req.body;
   if (typeof username === 'undefined') {
     res.status(401).json({ "message": `require username` });
@@ -66,7 +65,6 @@ const checkUsernameFree = async (req, res, next) => {
       res.status(401).json({ "message": `username ${username} already taken` });
     }
   }
-
 }
 
 const checkPassword = async (req, res, next) => {
@@ -88,17 +86,14 @@ const comparePassword = async (req, res, next) => {
 }
 
 const generateToken = async (req, res, next) => {
-
   const payload = {
     subject: req.existingUser.user_id,
     username: req.existingUser.username,
     role_name: req.existingUser.role_name,
   };
-
   const options = {
     expiresIn: '1d',
   }
-
   req.signedToken = jwt.sign(payload, JWT_SECRET, options);
   next()
 }

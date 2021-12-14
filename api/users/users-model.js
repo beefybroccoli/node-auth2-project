@@ -18,9 +18,9 @@ async function find() {
       }
     ]
    */
-    return await db('users as u')
-      .join('roles as r', 'r.role_id', 'u.role_id')
-      .select('u.user_id', 'u.username', 'r.role_name');
+  return await db('users as u')
+    .join('roles as r', 'r.role_id', 'u.role_id')
+    .select('u.user_id', 'u.username', 'r.role_name');
 }
 
 async function findBy(filter) {
@@ -37,10 +37,10 @@ async function findBy(filter) {
       }
     ]
    */
-    return await db('users as u')
-      .join('roles as r', 'r.role_id', 'u.role_id')
-      .select('u.user_id', 'u.username', 'u.password','r.role_name')
-      .where(filter);
+  return await db('users as u')
+    .join('roles as r', 'r.role_id', 'u.role_id')
+    .select('u.user_id', 'u.username', 'u.password', 'r.role_name')
+    .where(filter);
 }
 
 async function findById(user_id) {
@@ -54,7 +54,7 @@ async function findById(user_id) {
       "role_name": "instructor"
     }
    */
-    return await db('users as u')
+  return await db('users as u')
     .join('roles as r', 'r.role_id', 'u.role_id')
     .select('u.user_id', 'u.username', 'r.role_name')
     .where('user_id', user_id);
