@@ -2,7 +2,6 @@ const { JWT_SECRET } = require("../secrets"); // use this secret!
 const { findBy } = require("../users/users-model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const bodyParser = require("body-parser");
 
 const restricted = (req, res, next) => {
   /*
