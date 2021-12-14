@@ -16,6 +16,11 @@ const restricted = (req, res, next) => {
 
     Put the decoded token in the req object, to make life easier for middlewares downstream!
   */
+    if (false){
+      
+    }else{
+      next();
+    }
 }
 
 const only = role_name => (req, res, next) => {
@@ -29,6 +34,11 @@ const only = role_name => (req, res, next) => {
 
     Pull the decoded token from the req object, to avoid verifying it again!
   */
+    if (false){
+      
+    }else{
+      next();
+    }
 }
 
 

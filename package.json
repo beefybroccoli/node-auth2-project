@@ -7,7 +7,9 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
-    "test": "cross-env NODE_ENV=testing jest --verbose --runInBand"
+    "test": "cross-env NODE_ENV=testing jest --verbose --runInBand",
+    "push": "git add . && git commit -m '...' && git push origin main"
+
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
